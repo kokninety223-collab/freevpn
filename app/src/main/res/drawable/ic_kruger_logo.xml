@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Outer Cyan Ambient Aura -->
+    <path
+        android:fillColor="#1500F5D4"
+        android:pathData="M100,105m-80,0a80,80 0,1 1,160 0a80,80 0,1 1,-160 0" />
+
+    <!-- Camera Top Pentaprism Housing -->
+    <path
+        android:fillColor="#151C2C"
+        android:pathData="M78,60 L122,60 C128,60 131,64 134,74 L142,88 L58,88 L66,74 C69,64 72,60 78,60 Z" />
+
+    <!-- Traditional Filigree Flame Tip at top of Pentaprism -->
+    <path
+        android:strokeColor="#00F5D4"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M100,48 C96,52 96,56 100,60 C104,56 104,52 100,48 Z M96,56 C88,54 82,58 84,64 M104,56 C112,54 118,58 116,64" />
+
+    <!-- Camera Main Body with Rounded Corners -->
+    <path
+        android:fillColor="#0D1322"
+        android:strokeColor="#00F5D4"
+        android:strokeWidth="3"
+        android:strokeLineJoin="round"
+        android:pathData="M38,88 L162,88 C168.6,88 174,93.4 174,100 L174,160 C174,166.6 168.6,172 162,172 L38,172 C31.4,172 26,166.6 26,160 L26,100 C26,93.4 31.4,88 38,88 Z" />
+
+    <!-- Viewfinder Window (top left of camera body) -->
+    <path
+        android:fillColor="#060A12"
+        android:strokeColor="#6000F5D4"
+        android:strokeWidth="2"
+        android:pathData="M36,96 L48,96 C50.2,96 52,97.8 52,100 L52,106 C52,108.2 50.2,110 48,110 L36,110 C33.8,110 32,108.2 32,106 L32,100 C32,97.8 33.8,96 36,96 Z" />
+
+    <!-- Shutter Button on top right -->
+    <path
+        android:fillColor="#1F293D"
+        android:pathData="M144,80 L158,80 C160.2,80 162,81.8 162,84 L162,88 L140,88 L140,84 C140,81.8 141.8,80 144,80 Z" />
+
+    <!-- Outer Neon Lens Ring -->
+    <path
+        android:strokeColor="#00F5D4"
+        android:strokeWidth="3.5"
+        android:pathData="M100,130m-46,0a46,46 0,1 1,92 0a46,46 0,1 1,-92 0" />
+
+    <!-- Concentric Lens Ring 1 (White Ring) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:pathData="M100,130m-39,0a39,39 0,1 1,78 0a39,39 0,1 1,-78 0" />
+
+    <!-- Concentric Lens Ring 2 (Inner Thin White Ring) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:pathData="M100,130m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
+
+    <!-- Inner Core Lens Dark Background -->
+    <path
+        android:fillColor="#090D18"
+        android:pathData="M100,130m-26,0a26,26 0,1 1,52 0a26,26 0,1 1,-52 0" />
+
+    <!-- Stylized Bust of Bearded Warrior Sage (Zawgyi) in White -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M96,110 C104,108 112,112 112,120 C112,124 110,128 110,132 C112,136 116,140 118,146 C112,150 106,152 98,152 C92,150 86,144 84,138 C82,132 86,128 88,126 C86,124 84,122 86,120 C82,118 82,116 86,114 C88,112 92,110 96,110 Z" />
+
+    <!-- Sage Forehead Gem in Neon Cyan -->
+    <path
+        android:fillColor="#00F5D4"
+        android:pathData="M90,114m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-4 0" />
+
+    <!-- Sage Beard & Face Dark Engraving Grooves -->
+    <path
+        android:strokeColor="#090D18"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:pathData="M92,118 C98,116 104,118 108,122 M90,124 C94,124 98,122 102,124 M88,132 C92,136 90,142 88,146 M94,132 C96,138 94,144 92,148 M100,134 C102,140 100,146 98,150" />
+</vector>

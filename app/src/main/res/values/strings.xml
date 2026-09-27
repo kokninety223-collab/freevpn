@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">KRUGER</string>
+    <string name="vpn_service_label">KRUGER Secure VPN Tunnel</string>
+    
+    <!-- Connection states -->
+    <string name="status_connected">CONNECTED</string>
+    <string name="status_disconnected">DISCONNECTED</string>
+    <string name="status_connecting">CONNECTING...</string>
+    <string name="status_disconnecting">DISCONNECTING...</string>
+    
+    <!-- Myanmar and English subtitles -->
+    <string name="tap_to_connect">Tap to Connect</string>
+    <string name="tap_to_disconnect">Tap to Disconnect</string>
+    <string name="securely_protected">Your connection is fully encrypted &amp; private</string>
+    <string name="connection_unprotected">Unprotected • Tap button to encrypt</string>
+    
+    <!-- Regions -->
+    <string name="tab_all">All Servers</string>
+    <string name="tab_asia">Asia</string>
+    <string name="tab_usa">USA</string>
+    <string name="tab_favorites">Favorites</string>
+    
+    <!-- Speed & Stats -->
+    <string name="download_speed">Download</string>
+    <string name="upload_speed">Upload</string>
+    <string name="duration">Duration</string>
+    <string name="ping_latency">Ping</string>
+    <string name="ip_address">Virtual IP</string>
+    
+    <!-- Settings & Features -->
+    <string name="kill_switch">Kill Switch</string>
+    <string name="kill_switch_desc">Block internet when connection drops unexpectedly</string>
+    <string name="dns_leak_protect">DNS Leak Protection</string>
+    <string name="dns_leak_desc">Route DNS requests through secure Cloudflare &amp; Google servers</string>
+    <string name="stealth_mode">Stealth Mode (Obfuscation)</string>
+    <string name="stealth_mode_desc">Disguise VPN traffic as regular HTTPS traffic</string>
+    <string name="smart_connect">Smart Fastest Connect</string>
+    <string name="protocol">Protocol</string>
+    
+    <!-- Speed Test -->
+    <string name="speed_test_title">Speed &amp; Latency Test</string>
+    <string name="run_speed_test">Run Speed Test</string>
+    <string name="testing_speed">Testing Connection...</string>
+</resources>

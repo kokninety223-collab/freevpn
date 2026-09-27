@@ -1,0 +1,6 @@
+{
+  "name": "KRUGER",
+  "description": "Fast, secure, and free VPN with high-speed Asia and USA servers, real-time speed monitoring, and ping latency testing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

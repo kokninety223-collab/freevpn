@@ -1,0 +1,130 @@
+# ==============================================================================
+# Codemagic CI/CD Configuration for KRUGER VPN Android App
+# Docs: https://docs.codemagic.io/yaml-basic-configuration/yaml-getting-started/
+# ==============================================================================
+
+workflows:
+  # ----------------------------------------------------------------------------
+  # Workflow 1: Build Release APK and Google Play App Bundle (AAB)
+  # ----------------------------------------------------------------------------
+  android-release:
+    name: KRUGER Release (APK & AAB)
+    max_build_duration: 30
+    instance_type: linux_x2
+
+    environment:
+      # Optional: Add your Codemagic Environment variable groups here
+      # (e.g., android_keystore, google_play)
+      groups:
+        - android_keystore
+      vars:
+        PACKAGE_NAME: "com.aistudio.pacificvpn.xkyzrt"
+      java: 17
+
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+        - pattern: 'master'
+          include: true
+          source: true
+
+    scripts:
+      - name: Set up Environment & Secrets
+        script: |
+          echo "=== Setting up Build Environment ==="
+          # Create .env from template if not present
+          if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+            cp .env.example .env
+            echo ".env created from .env.example"
+          elif [ ! -f ".env" ]; then
+            touch .env
+            echo "Empty .env created for Secrets Gradle Plugin"
+          fi
+
+          # If debug.keystore is missing, decode from base64 if available
+          if [ ! -f "debug.keystore" ] && [ -f "debug.keystore.base64" ]; then
+            base64 --decode debug.keystore.base64 > debug.keystore
+            echo "debug.keystore decoded from base64"
+          fi
+
+          # Ensure Gradle wrapper has executable permissions
+          chmod +x gradlew
+
+      - name: Run Unit Tests
+        script: |
+          echo "=== Running Android JVM Unit Tests ==="
+          ./gradlew testDebugUnitTest --continue
+
+      - name: Build Android Release & Debug APKs
+        script: |
+          echo "=== Building APKs ==="
+          # Assembles both Release and Debug APKs
+          ./gradlew assembleDebug assembleRelease --stacktrace
+
+      - name: Build Android App Bundle (AAB) for Google Play
+        script: |
+          echo "=== Building Release Bundle (.aab) ==="
+          ./gradlew bundleRelease --stacktrace
+
+    artifacts:
+      # Export APK and AAB outputs to Codemagic artifacts download page
+      - app/build/outputs/apk/**/*.apk
+      - app/build/outputs/bundle/**/*.aab
+      - app/build/outputs/mapping/**/mapping.txt
+
+    publishing:
+      email:
+        recipients:
+          - kokninety223@gmail.com
+        notify:
+          failure: true
+          success: true
+
+  # ----------------------------------------------------------------------------
+  # Workflow 2: Fast Debug APK Build (Quick Testing)
+  # ----------------------------------------------------------------------------
+  android-debug:
+    name: KRUGER Fast Debug APK
+    max_build_duration: 15
+    instance_type: linux_x2
+
+    environment:
+      java: 17
+
+    triggering:
+      events:
+        - pull_request
+      branch_patterns:
+        - pattern: '*'
+          include: true
+
+    scripts:
+      - name: Prepare Environment
+        script: |
+          if [ ! -f ".env" ]; then
+            touch .env
+          fi
+          if [ ! -f "debug.keystore" ] && [ -f "debug.keystore.base64" ]; then
+            base64 --decode debug.keystore.base64 > debug.keystore
+          fi
+          chmod +x gradlew
+
+      - name: Build Debug APK
+        script: |
+          ./gradlew assembleDebug
+
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+
+    publishing:
+      email:
+        recipients:
+          - kokninety223@gmail.com
+        notify:
+          failure: true
+          success: true
