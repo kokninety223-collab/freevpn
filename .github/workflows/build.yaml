@@ -1,0 +1,130 @@
+name: KRUGER Android Build & Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Publish a GitHub Release with APK & AAB'
+        required: false
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Deploy Android App
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Android Environment & Keystore
+        run: |
+          echo "=== Setting up Build Environment ==="
+          # Generate .env file if not present
+          if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+            cp .env.example .env
+            echo ".env initialized from .env.example"
+          elif [ ! -f ".env" ]; then
+            touch .env
+            echo "Empty .env created"
+          fi
+
+          # Decode debug keystore if base64 file exists
+          if [ ! -f "debug.keystore" ] && [ -f "debug.keystore.base64" ]; then
+            base64 --decode debug.keystore.base64 > debug.keystore
+            echo "debug.keystore decoded successfully"
+          fi
+
+          # Grant execution permissions for Gradle wrapper
+          chmod +x gradlew
+
+      - name: Run Unit Tests
+        run: |
+          echo "=== Running JVM Tests ==="
+          ./gradlew testDebugUnitTest --continue
+
+      - name: Build Debug & Release APKs
+        run: |
+          echo "=== Building APK Packages ==="
+          ./gradlew assembleDebug assembleRelease --stacktrace
+
+      - name: Build Google Play App Bundle (AAB)
+        run: |
+          echo "=== Building Release Bundle (.aab) ==="
+          ./gradlew bundleRelease --stacktrace
+
+      - name: Organize Build Outputs
+        run: |
+          mkdir -p release-artifacts
+          # Copy APKs
+          find app/build/outputs/apk/release/ -name "*.apk" -exec cp {} release-artifacts/KRUGER-Release.apk \; 2>/dev/null || true
+          find app/build/outputs/apk/debug/ -name "*.apk" -exec cp {} release-artifacts/KRUGER-Debug.apk \; 2>/dev/null || true
+          # Copy Bundle
+          find app/build/outputs/bundle/release/ -name "*.aab" -exec cp {} release-artifacts/KRUGER-Release.aab \; 2>/dev/null || true
+          ls -lah release-artifacts/
+
+      - name: Upload Debug APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KRUGER-Debug-APK
+          path: release-artifacts/KRUGER-Debug.apk
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KRUGER-Release-APK
+          path: release-artifacts/KRUGER-Release.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload Release Bundle (AAB) Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KRUGER-Release-AAB
+          path: release-artifacts/KRUGER-Release.aab
+          if-no-files-found: warn
+          retention-days: 30
+
+      # Automatically publish a GitHub Release when pushing a git tag (e.g. v1.0.0) or triggered manually
+      - name: Create GitHub Release & Deploy Artifacts
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.create_release == true)
+        uses: softprops/action-gh-release@v2
+        with:
+          name: KRUGER VPN ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            release-artifacts/KRUGER-Release.apk
+            release-artifacts/KRUGER-Debug.apk
+            release-artifacts/KRUGER-Release.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
